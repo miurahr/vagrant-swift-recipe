@@ -1,0 +1,19 @@
+#!/bin/bash
+
+swift-init all stop
+find /var/log/swift -type f -exec rm -f {} \;
+sudo umount /srv/1
+sudo umount /srv/2
+sudo umount /srv/3
+sudo umount /srv/4
+sudo mkfs.xfs -f -L data1 /dev/vda5
+sudo mkfs.xfs -f -L data2 /dev/vda6
+sudo mkfs.xfs -f -L data3 /dev/vda7
+sudo mkfs.xfs -f -L data4 /dev/vda8
+sudo mount -a
+mkdir -p /srv/1/node/sdb1 /srv/2/node/sdb2 /srv/3/node/sdb3 /srv/4/node/sdb4
+sudo chown -R vagrant:vagrant /srv/*
+sudo rm -f /var/log/debug /var/log/messages /var/log/rsyncd.log /var/log/syslog
+find /var/cache/swift* -type f -name *.recon -exec rm -f {} \;
+sudo service rsyslog restart
+sudo service memcached restart
