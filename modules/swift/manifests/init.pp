@@ -126,9 +126,10 @@ file {
 }
 
 file {
- ["/var/cache/swift1",
+ ["/var/cache/swift",
   "/var/cache/swift2",
-  "/var/cache/swift3"]:
+  "/var/cache/swift3",
+  "/var/cache/swift4"]:
   require => Package["openstack-swift"],
   owner  => "swift",
   group  => "swift",
@@ -211,21 +212,36 @@ file {'/etc/swift/object.ring.gz':
     ensure => 'present'
 }
 
+file {"/tmp/openstack-swift-prerequisite":
+  require => File [
+   '/etc/swift/swift.conf',
+   '/etc/swift/proxy-server.conf',
+   '/etc/swift/object.ring.gz',
+   '/etc/swift/container.ring.gz',
+   '/etc/swift/account.ring.gz',
+   '/srv/2/node', '/etc/swift/object-server/4.conf',
+   '/srv/3/node', '/etc/swift/account-server/4.conf',
+   '/srv/4/node', '/etc/swift/container-server/4.conf',
+   '/var/cache/swift4'],
+  ensure   => "present",
+  content => template("swift/stamp")
+}
+
 service { 
  'openstack-swift-account':
-   require => File ['/etc/swift/account.ring.gz','/srv/4/node', '/etc/swift/account-server/4.conf'],
+   require => File ['/tmp/openstack-swift-prerequisite'],
    ensure => 'running',
    enable => 'true';
  'openstack-swift-container':
-   require => File ['/etc/swift/container.ring.gz','/srv/4/node', '/etc/swift/container-server/4.conf'],
+   require => File ['/tmp/openstack-swift-prerequisite'],
    ensure => 'running',
    enable => 'true';
  'openstack-swift-object':
-   require => File ['/etc/swift/object.ring.gz', '/srv/4/node', '/etc/swift/object-server/4.conf'],
+   require => File ['/tmp/openstack-swift-prerequisite'],
    ensure => 'running',
    enable => 'true';
  'openstack-swift-proxy':
-   require => File["/etc/swift/object.ring.gz","/etc/swift/account.ring.gz","/etc/swift/container.ring.gz" ,"/etc/swift/proxy-server.conf"],
+   require => File ['/tmp/openstack-swift-prerequisite'],
    ensure => 'running',
    enable => 'true';
 }
