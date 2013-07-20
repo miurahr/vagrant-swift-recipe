@@ -41,7 +41,7 @@ file {"/etc/rsyslog.d/10-swift.conf":
   require => Package["rsyslog"],
   ensure => "present",
   owner => "root",
-  group => "root",
+  group => "root"
 }
 file {"/etc/rsyncd.conf":
   content => template("swift/rsyncd.conf"),
@@ -70,19 +70,21 @@ file {
     ensure => "directory",
     owner  => "root",
     group  => "root",
-    mode   => 750;
+    mode   => 755;
 }
 file {
  "/etc/swift/proxy-server.conf":
     content => template("swift/proxy-server.conf"),
     require => File["/etc/swift"],
     owner   => "root",
-    group   => "root";
+    group   => "root",
+    mode    => 644;
  "/etc/swift/swift.conf":
     content => template("swift/swift.conf"),
     require => File["/etc/swift"],
     owner   => "root",
-    group   => "root";
+    group   => "root",
+    mode    => 644;
 }
 file {
  "/etc/swift/account-server/1.conf":
@@ -120,7 +122,7 @@ file {
     ensure => "directory",
     owner  => "root",
     group  => "root",
-    mode   => 750
+    mode   => 755
 }
 
 file {
