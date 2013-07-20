@@ -5,8 +5,10 @@ Vagrant.configure("2") do |config|
   config.vm.box = "saio"
   config.vm.network :private_network, ip: "192.168.123.234"
 
+  config.ssh.timeout   = 300
+  config.ssh.max_tries = 50
+
   config.vm.provision :puppet do |puppet|
-     puppet.options = "--verbose"
      puppet.manifests_path = "manifests"
      puppet.manifest_file = "site.pp"
      puppet.module_path = "modules"
