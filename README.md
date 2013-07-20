@@ -4,7 +4,8 @@ vagrant-swift-recipe
 Vagrant recipe for building All in one Swift environment on CentOS/RHEL 6.
 
 works with box
-https://s3-ap-northeast-1.amazonaws.com/miurahr-public/vagrant-centos-64-kvm.box
+
+http://downloads.da-cha.jp/public_file/vagrant-centos-64-kvm.box
 
 difference: 
 The image has several partitions for swift data storage
