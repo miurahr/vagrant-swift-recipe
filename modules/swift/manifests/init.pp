@@ -177,17 +177,55 @@ file {
   mode   => 750
 }
 
+file {"/usr/local/bin":
+  ensure => "directory",
+  mode   => 755,
+}
+
+file { "/usr/local/bin/remakerings":
+  require => File["/usr/local/bin"],
+  content => template("swift/remakerings"),
+  ensure => "present",
+  owner => "root",
+  group => "root",
+  mode  => 755
+}
+
+exec { "create_ring_files":
+   require => File["/usr/local/bin/remakerings"],
+   command => "/usr/local/bin/remakerings",
+   path    => "/usr/local/bin:/usr/bin",
+   creates => ["/etc/swift/account.ring.gz", "/etc/swift/container.ring.gz", "/etc/swift/object.ring.gz"]
+}
+
+file {'/etc/swift/account.ring.gz':
+    require => Exec["create_ring_files"],
+    ensure => 'present'
+}
+file {'/etc/swift/container.ring.gz':
+    require => Exec["create_ring_files"],
+    ensure => 'present'
+}
+file {'/etc/swift/object.ring.gz':
+    require => Exec["create_ring_files"],
+    ensure => 'present'
+}
+
 service { 
  'openstack-swift-account':
+   require => File ['/etc/swift/account.ring.gz','/srv/4/node', '/etc/swift/account-server/4.conf'],
    ensure => 'running',
    enable => 'true';
  'openstack-swift-container':
+   require => File ['/etc/swift/container.ring.gz','/srv/4/node', '/etc/swift/container-server/4.conf'],
    ensure => 'running',
    enable => 'true';
  'openstack-swift-object':
+   require => File ['/etc/swift/object.ring.gz', '/srv/4/node', '/etc/swift/object-server/4.conf'],
    ensure => 'running',
    enable => 'true';
  'openstack-swift-proxy':
+   require => File["/etc/swift/object.ring.gz","/etc/swift/account.ring.gz","/etc/swift/container.ring.gz" ,"/etc/swift/proxy-server.conf"],
    ensure => 'running',
    enable => 'true';
 }
