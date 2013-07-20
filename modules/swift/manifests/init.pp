@@ -24,13 +24,6 @@ package {
    ensure  => "installed",
 }
 
-augeas { "rsyslog.conf":
-  context => "/files/etc/rsyslog.conf",
-  changes => [
-    "$PrivDropToGroup adm",
-  ],
-}
-
 service { 'memcached':
   require => Package["memcached"],
   ensure => 'running',
