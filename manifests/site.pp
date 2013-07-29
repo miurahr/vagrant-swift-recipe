@@ -14,12 +14,22 @@ class repo {
     enabled  => 1,
     gpgcheck => 0,
   }
+
+  class { 'yumconf':
+    #proxy          => 'http://proxy/',
+    #proxy_username => 'username',
+    #proxy_passowrd => 'password',
+  }
 }
+
 
 node default {
   class { 'repo': stage => yum }
   include swift
+  include develpkg
 }
 
-$develpkgs = ["curl","gcc","git","python-setuptools"]
-package { $develpkgs: ensure => "installed" }
+class develpkg {
+  $develpkgs = ["curl","gcc","git","python-setuptools"]
+  package { $develpkgs: ensure => "installed" }
+}
