@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
   ## - to optimize KVM environment, disk drive should be virtio.
 
   config.vm.network :private_network, ip: "192.168.123.234"
-  config.vm.network :forward_port, guest: 8080, host: 12345, auto_correct: true
+  config.vm.network :forwarded_port, guest: 8080, host: 12345, auto_correct: true
 
   config.ssh.timeout   = 500
   config.ssh.max_tries = 100
