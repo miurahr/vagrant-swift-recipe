@@ -4,8 +4,30 @@
 
 stage { 'yum' : before => Stage['main'] }
 
-class repo {
+class fedora-grizzly-repo {
+  yumrepo { "fedora-openstack-grizlly":
+    descr     => 'OpenStack Grizzly Repository for Fedora',
+    baseurl   => 'http://repos.fedorapeople.org/repos/openstack/openstack-grizzly/fedora-$releasever/',
+    failovermethod => "priority",
+    enabled   => 1,
+    gpgcheck  => 0,
+    skip_if_unavailable => 1,
+  }
+}
 
+class epel-grizlly-repo {
+  yumrepo { "epel-openstack-grizlly":
+    descr     => 'OpenStack Grizzly Repository for EPEL 6',
+    baseurl   => 'http://repos.fedorapeople.org/repos/openstack/openstack-grizzly/epel-6',
+    failovermethod => "priority",
+    enabled   => 1,
+    gpgcheck  => 0,
+    priority  => 98,
+  }
+
+}
+
+class epel-folsom-repo {
   yumrepo { "epel":
     descr    => 'Extra Packages for Enterprise Linux 6',
     #baseurl  => 'http://download.fedoraproject.org/pub/epel/6/$basearch',
@@ -14,7 +36,9 @@ class repo {
     enabled  => 1,
     gpgcheck => 0,
   }
+}
 
+class yum-proxy {
   class { 'yumconf':
     #proxy          => 'http://proxy/',
     #proxy_username => 'username',
@@ -24,7 +48,14 @@ class repo {
 
 
 node default {
-  class { 'repo': stage => yum }
+  class { 'yum-proxy': stage => yum }
+
+  # Choose from several alternative repositories
+  #
+  # class {'epel-folsom-repo': stage => yum }
+  # class {'fedora-grizlly-repo': stage => yum}
+  class {'epel-grizlly-repo': stage => yum}
+ 
   include swift
   include develpkg
 }

@@ -5,7 +5,8 @@ Vagrant.configure("2") do |config|
   config.vm.box = "base"
 
   # for virtualbox.
-  #config.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-i386-v20130427.box
+  config.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-i386-v20130427.box"
+  # config.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20130427.box"
 
   # for AWS
   #config.vm.box = "dummy"
@@ -13,6 +14,10 @@ Vagrant.configure("2") do |config|
 
   # for KVM
   #config.vm.box_url = "http://downloads.da-cha.jp/public_file/vagrant-centos-64-kvm.box"
+  ## difference from ordinal base boxes:
+  ## - The image has several partitions for swift data storage
+  ##   and mount to /srv/1 /srv/2 /srv/3 /srv/4 with XFS.
+  ## - to optimize KVM environment, disk drive should be virtio.
 
   config.vm.network :private_network, ip: "192.168.123.234"
   config.vm.network :forward_port, guest: 8080, host: 12345, auto_correct: true
