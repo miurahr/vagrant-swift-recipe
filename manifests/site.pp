@@ -39,16 +39,18 @@ class epel-folsom-repo {
 }
 
 class yum-proxy {
-  class { 'yumconf':
-    #proxy          => 'http://proxy/',
-    #proxy_username => 'username',
-    #proxy_passowrd => 'password',
+  yumconf::proxy {
+    'myproxy':
+        proxy          => 'http://proxy/',
+        proxy_username => 'username',
+        proxy_passowrd => 'password';
   }
 }
 
 
 node default {
-  class { 'yum-proxy': stage => yum }
+  # if you need proxy, enable follows
+  #class { 'yum-proxy': stage => yum }
 
   # Choose from several alternative repositories
   #
