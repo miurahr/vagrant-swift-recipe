@@ -3,6 +3,7 @@
 #
 
 stage { 'yum' : before => Stage['main'] }
+stage { 'pre' : before => Stage['yum'] }
 
 class fedora-grizzly-repo {
   yumrepo { "fedora-openstack-grizlly":
@@ -39,18 +40,20 @@ class epel-folsom-repo {
 }
 
 class yum-proxy {
-  yumconf::proxy {
-    'myproxy':
-        proxy          => 'http://proxy/',
-        proxy_username => 'username',
-        proxy_passowrd => 'password';
+  augeas { 'yum.conf':
+      context => "/files/etc/yum.conf/main",
+      changes => [
+        "set proxy http://proxy:8080/" ,
+	"set proxy_username username",
+	"set proxy_password password",
+      ],
   }
 }
 
 
 node default {
   # if you need proxy, enable follows
-  #class { 'yum-proxy': stage => yum }
+  class { 'yum-proxy': stage => pre }
 
   # Choose from several alternative repositories
   #
