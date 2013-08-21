@@ -28,7 +28,7 @@ class epel-grizlly-repo {
 
 }
 
-class epel-folsom-repo {
+class epel-repo {
   yumrepo { "epel":
     descr    => 'Extra Packages for Enterprise Linux 6',
     #baseurl  => 'http://download.fedoraproject.org/pub/epel/6/$basearch',
@@ -57,7 +57,7 @@ node default {
 
   # Choose from several alternative repositories
   #
-  # class {'epel-folsom-repo': stage => yum }
+  class {'epel-repo': stage => yum }
   # class {'fedora-grizlly-repo': stage => yum}
   class {'epel-grizlly-repo': stage => yum}
  
