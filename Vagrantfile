@@ -42,6 +42,12 @@ Vagrant.configure("2") do |config|
     aws.ssh_username = "ubuntu"
   end
 
+  # If you use special VM images
+  # that have already had /srv/[1-4]
+  # and mount XFS pertition there,
+  # please comment out below.
+  config.vm.provision :shell, :inline => "mkdir -p /srv/1 /srv/2 /srv/3 /srv/4"
+
   config.vm.provision :puppet do |puppet|
      puppet.manifests_path = "manifests"
      puppet.manifest_file = "site.pp"
