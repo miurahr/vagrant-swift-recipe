@@ -50,10 +50,9 @@ class yum-proxy {
   }
 }
 
-
 node default {
   # if you need proxy, enable follows
-  class { 'yum-proxy': stage => pre }
+  #class { 'yum-proxy': stage => pre }
 
   # Choose from several alternative repositories
   #
